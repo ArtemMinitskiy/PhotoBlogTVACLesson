@@ -3,17 +3,29 @@ package com.example.artem.photoblogtvaclesson;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
+
+    private Toolbar toolbar;
+
     private FirebaseAuth mAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("PhotoBlog");
+
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -27,6 +39,36 @@ public class MainActivity extends AppCompatActivity {
             sendToLogin();
 
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+//            case R.id.btn_search:
+//            case R.id.btn_settings:
+            case R.id.btn_log_out:
+
+                logout();
+                return true;
+                default:
+                    return false;
+        }
+
+    }
+
+    private void logout() {
+        mAuth.signOut();
+        sendToLogin();
     }
 
     private void sendToLogin() {

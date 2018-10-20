@@ -4,5 +4,11 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="sign_in">Login to Account</string>
-    <string name="create_account">Create new Account</string>
+    <string name="create_account">Create Account</string>
+    <string name="search">Search</string>
+    <string name="settings">Account Settings</string>
+    <string name="exit">Log Out</string>
+    <string name="registration_logo">Register a new Account</string>
+    <string name="have_account">Already have an Account?</string>
+    <string name="confirm_password">Confirm Password</string>
 </resources>

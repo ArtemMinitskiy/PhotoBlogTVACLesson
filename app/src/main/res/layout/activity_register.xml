@@ -5,16 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorLightBlue"
-    tools:context=".LoginActivity">
+    tools:context=".RegisterActivity">
 
     <TextView
-        android:id="@+id/welcomeText"
+        android:id="@+id/registrationText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="101dp"
         android:layout_marginEnd="8dp"
-        android:text="@string/welcome"
+        android:text="@string/registration_logo"
         android:textColor="@android:color/white"
         android:textSize="25sp"
         android:textStyle="bold"
@@ -23,7 +23,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editEmail"
+        android:id="@+id/regEmail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -40,7 +40,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/editPassword"
+        android:id="@+id/regPassword"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -54,18 +54,35 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/regEmail" />
 
-    <Button
-        android:id="@+id/sign_in"
+    <EditText
+        android:id="@+id/regConfPassword"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="39dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="@string/confirm_password"
+        android:inputType="textPassword"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/regPassword" />
+
+    <Button
+        android:id="@+id/reg_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="60dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="57dp"
         android:background="@color/colorRed"
-        android:text="@string/sign_in"
+        android:text="@string/create_account"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textSize="20sp"
@@ -73,17 +90,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/regPassword" />
 
     <Button
-        android:id="@+id/create_account"
+        android:id="@+id/reg_login_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
         android:background="@color/colorGrey"
-        android:text="@string/create_account"
+        android:text="@string/have_account"
         android:textAllCaps="false"
         android:textColor="@android:color/black"
         android:textSize="20sp"
@@ -91,10 +108,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sign_in" />
+        app:layout_constraintTop_toBottomOf="@+id/reg_btn" />
 
     <ProgressBar
-        android:id="@+id/login_progress"
+        android:id="@+id/reg_progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

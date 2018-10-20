@@ -20,10 +20,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText loginEmailText;
-    private EditText loginPassText;
-    private Button loginBtn;
-    private Button loginRegBtn;
+    private EditText loginEmailText, loginPassText;
+    private Button loginBtn, loginRegBtn;
 
     private FirebaseAuth mAuth;
 
@@ -45,9 +43,8 @@ public class LoginActivity extends AppCompatActivity {
         loginRegBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-//                Intent regIntent = new Intent(LoginActivity.this, RegisterActivity.class);
-//                startActivity(regIntent);
+                Intent regIntent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(regIntent);
 
             }
         });
@@ -56,7 +53,6 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String loginEmail = loginEmailText.getText().toString();
                 String loginPass = loginPassText.getText().toString();
 
