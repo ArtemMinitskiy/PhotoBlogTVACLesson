@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">PhotoBlogTVACLesson</string>
+    <string name="welcome">Welcome to Photo Blog</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Login to Account</string>
+    <string name="create_account">Create new Account</string>
+</resources>
