@@ -11,4 +11,6 @@
     <string name="registration_logo">Register a new Account</string>
     <string name="have_account">Already have an Account?</string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="setup_name">Your name</string>
+    <string name="setup_button">Save account settings</string>
 </resources>

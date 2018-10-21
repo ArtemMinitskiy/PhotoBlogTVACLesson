@@ -54,14 +54,17 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()){
-//            case R.id.btn_search:
-//            case R.id.btn_settings:
             case R.id.btn_log_out:
-
                 logout();
                 return true;
-                default:
-                    return false;
+            case R.id.btn_settings:
+                Intent intentSettings = new Intent(MainActivity.this, SetupActivity.class);
+                startActivity(intentSettings);
+                return true;
+//            case R.id.btn_search:
+
+            default:
+                return false;
         }
 
     }
