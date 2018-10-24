@@ -133,9 +133,9 @@ public class SetupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final String user_name = setupName.getText().toString();
-                progressBar.setVisibility(View.VISIBLE);
-                if (isChanged) {
-                    if (!TextUtils.isEmpty(user_name) && mainimageURI != null) {
+                if (!TextUtils.isEmpty(user_name) && mainimageURI != null) {
+                    progressBar.setVisibility(View.VISIBLE);
+                    if (isChanged) {
                         user_id = firebaseAuth.getCurrentUser().getUid();
                         final StorageReference image_path = storageReference.child("profile_images_photoblog").child(user_id + ".jpg");
                         image_path.putFile(mainimageURI).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
@@ -156,9 +156,9 @@ public class SetupActivity extends AppCompatActivity {
 
                             }
                         });
+                    }else {
+                        storeFirebase(null, user_name);
                     }
-                }else {
-                    storeFirebase(null, user_name);
                 }
             }
         });

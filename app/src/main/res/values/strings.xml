@@ -13,4 +13,6 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="setup_name">Your name</string>
     <string name="setup_button">Save account settings</string>
+    <string name="newPostHint">Add Description</string>
+    <string name="postBtn">Post</string>
 </resources>
