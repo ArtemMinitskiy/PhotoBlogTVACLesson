@@ -1,6 +1,7 @@
 package com.example.artem.photoblogtvaclesson;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,17 +9,24 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore firebaseFirestore;
 
     private FloatingActionButton postBtn;
 
+    private String current_user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("PhotoBlog");
 
         mAuth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
 
         postBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,6 +59,21 @@ public class MainActivity extends AppCompatActivity {
         if(currentUser == null){
             sendToLogin();
 
+        }else {
+            current_user_id = mAuth.getCurrentUser().getUid();
+            firebaseFirestore.collection("Users").document(current_user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()){
+                        if (!task.getResult().exists()){
+
+                            Intent setupIntent = new Intent(MainActivity.this, SetupActivity.class);
+                            startActivity(setupIntent);
+                            finish();
+                        }
+                    }
+                }
+            });
         }
     }
 
