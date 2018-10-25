@@ -2,7 +2,10 @@ package com.example.artem.photoblogtvaclesson;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -21,12 +24,17 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
+    private FloatingActionButton postBtn;
+    private BottomNavigationView navView;
+
     private FirebaseAuth mAuth;
     private FirebaseFirestore firebaseFirestore;
 
-    private FloatingActionButton postBtn;
-
     private String current_user_id;
+
+    private HomeFragment homeFragment;
+    private NotificationFragment notificationFragment;
+    private AccountFragment accountFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +43,31 @@ public class MainActivity extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         postBtn = (FloatingActionButton) findViewById(R.id.add_post_btn);
+        navView = (BottomNavigationView) findViewById(R.id.nav_view);
+
+        homeFragment = new HomeFragment();
+        notificationFragment = new NotificationFragment();
+        accountFragment = new AccountFragment();
+
+        navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.home_action_btn:
+                        replaceFragment(homeFragment);
+                        return true;
+                    case R.id.notif_action_btn:
+                        replaceFragment(notificationFragment);
+                        return true;
+                    case R.id.account_action_btn:
+                        replaceFragment(accountFragment);
+                        return true;
+                        default:
+                            return false;
+                }
+            }
+        });
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("PhotoBlog");
 
@@ -124,6 +157,11 @@ public class MainActivity extends AppCompatActivity {
         }else {
 
         }
+    }
 
+    private void replaceFragment(Fragment fragment){
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.main_container, fragment);
+        fragmentTransaction.commit();
     }
 }

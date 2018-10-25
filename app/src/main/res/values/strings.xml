@@ -15,4 +15,7 @@
     <string name="setup_button">Save account settings</string>
     <string name="newPostHint">Add Description</string>
     <string name="postBtn">Post</string>
+    <string name="menuHome">Home</string>
+    <string name="menuNotif">Notification</string>
+    <string name="menuAccount">Account</string>
 </resources>
