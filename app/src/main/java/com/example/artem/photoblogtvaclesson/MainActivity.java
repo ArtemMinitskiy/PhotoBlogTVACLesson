@@ -45,44 +45,47 @@ public class MainActivity extends AppCompatActivity {
         postBtn = (FloatingActionButton) findViewById(R.id.add_post_btn);
         navView = (BottomNavigationView) findViewById(R.id.nav_view);
 
-        homeFragment = new HomeFragment();
-        notificationFragment = new NotificationFragment();
-        accountFragment = new AccountFragment();
-
-        navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()){
-                    case R.id.home_action_btn:
-                        replaceFragment(homeFragment);
-                        return true;
-                    case R.id.notif_action_btn:
-                        replaceFragment(notificationFragment);
-                        return true;
-                    case R.id.account_action_btn:
-                        replaceFragment(accountFragment);
-                        return true;
-                        default:
-                            return false;
-                }
-            }
-        });
-
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("PhotoBlog");
 
         mAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
 
-        postBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent postIntent = new Intent(MainActivity.this, NewPostActivity.class);
-                startActivity(postIntent);
-                finish();
-            }
-        });
+//        if (mAuth.getCurrentUser() != null) {
+            homeFragment = new HomeFragment();
+            notificationFragment = new NotificationFragment();
+            accountFragment = new AccountFragment();
 
+            replaceFragment(homeFragment);
+
+            navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    switch (menuItem.getItemId()) {
+                        case R.id.home_action_btn:
+                            replaceFragment(homeFragment);
+                            return true;
+                        case R.id.notif_action_btn:
+                            replaceFragment(notificationFragment);
+                            return true;
+                        case R.id.account_action_btn:
+                            replaceFragment(accountFragment);
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
+            });
+
+            postBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent postIntent = new Intent(MainActivity.this, NewPostActivity.class);
+                    startActivity(postIntent);
+                    finish();
+                }
+            });
+//        }
     }
 
     @Override
