@@ -20,13 +20,13 @@
         android:id="@+id/new_post_image"
         android:layout_width="0dp"
         android:layout_height="160dp"
+        android:background="@color/colorGrey"
+        android:contentDescription="TODO"
         android:scaleType="centerCrop"
+        android:src="@mipmap/action_add"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        android:background="@color/colorRed"
-        android:src="@mipmap/action_add"
-        android:contentDescription="TODO" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <EditText
         android:id="@+id/new_post_desc"

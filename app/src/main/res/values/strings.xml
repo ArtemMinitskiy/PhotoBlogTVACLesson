@@ -18,4 +18,7 @@
     <string name="menuHome">Home</string>
     <string name="menuNotif">Notification</string>
     <string name="menuAccount">Account</string>
+    <string name="postUserName">User Name</string>
+    <string name="postTime">Post Time</string>
+    <string name="postDescription">Description Post</string>
 </resources>
