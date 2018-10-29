@@ -11,6 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
 import java.util.List;
@@ -24,21 +29,37 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
     }
     public Context context;
 
+    private FirebaseFirestore firebaseFirestore;
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.blog_list_item, viewGroup, false);
         context = viewGroup.getContext();
+        firebaseFirestore = FirebaseFirestore.getInstance();
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String name = blogPosts.get(position).getUser_id();
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+        String user_id = blogPosts.get(position).getUser_id();
+        firebaseFirestore.collection("Users").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()){
+                    String userName = task.getResult().getString("name");
+                    String userImage = task.getResult().getString("image");
+                    holder.setUserName(userName);
+                    holder.setUserImage(userImage);
+                }else {
+
+                }
+            }
+        });
+
         String description = blogPosts.get(position).getDesc();
         String image_url = blogPosts.get(position).getImage_url();
 
-        holder.setUserName(name);
         holder.setTextDescription(description);
         holder.setImage(image_url);
 
@@ -79,8 +100,14 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
         public void setTextDescription(String description){
             postDescription.setText(description);
         }
+        public void setUserImage(String downloadUrl){
+            Glide.with(context).load(downloadUrl).into(postUserImage);
+        }
         public void setImage(String downloadUrl){
-            Glide.with(context).load(downloadUrl).into(postImage);
+            RequestOptions placeholder = new RequestOptions();
+            placeholder.placeholder(R.drawable.user_default);
+
+            Glide.with(context).applyDefaultRequestOptions(placeholder).load(downloadUrl).into(postImage);
         }
     }
 }

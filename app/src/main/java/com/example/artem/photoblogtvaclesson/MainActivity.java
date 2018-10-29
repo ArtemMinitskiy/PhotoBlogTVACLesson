@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
 
-//        if (mAuth.getCurrentUser() != null) {
+        if (mAuth.getCurrentUser() != null) {
             homeFragment = new HomeFragment();
             notificationFragment = new NotificationFragment();
             accountFragment = new AccountFragment();
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                     finish();
                 }
             });
-//        }
+        }
     }
 
     @Override
