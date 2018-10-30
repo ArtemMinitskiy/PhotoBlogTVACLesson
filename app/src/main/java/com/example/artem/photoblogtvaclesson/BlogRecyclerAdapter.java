@@ -8,12 +8,14 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -34,8 +36,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapter.ViewHolder> {
     public List<BlogPost> blogPosts;
-    public BlogRecyclerAdapter(List<BlogPost> blogPosts) {
+    public List<User> userList;
+    public BlogRecyclerAdapter(List<BlogPost> blogPosts, List<User> user_list) {
         this.blogPosts = blogPosts;
+        this.userList = user_list;
     }
     public Context context;
 
@@ -53,27 +57,24 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
         holder.setIsRecyclable(false);
 
         final String blogPostID = blogPosts.get(position).BlogPostID;
         final String currentUserId = firebaseAuth.getCurrentUser().getUid();
 
-        String user_id = blogPosts.get(position).getUser_id();
-        firebaseFirestore.collection("Users").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()){
-                    String userName = task.getResult().getString("name");
-                    String userImage = task.getResult().getString("image");
-                    holder.setUserName(userName);
-                    holder.setUserImage(userImage);
-                }else {
+        String blog_user_id = blogPosts.get(position).getUser_id();
 
-                }
-            }
-        });
+        if (blog_user_id.equals(currentUserId)){
+            holder.deleteBtn.setEnabled(true);
+            holder.deleteBtn.setVisibility(View.VISIBLE);
+        }
+
+        String userName = userList.get(position).getName();
+        String userImage = userList.get(position).getImage();
+        holder.setUserName(userName);
+        holder.setUserImage(userImage);
 
         String description = blogPosts.get(position).getDesc();
         String image_url = blogPosts.get(position).getImage_url();
@@ -143,6 +144,20 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
             }
         });
 
+        holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firebaseFirestore.collection("Posts").document(blogPostID).delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                blogPosts.remove(position);
+                                userList.remove(position);
+                            }
+                        });
+            }
+        });
+
     }
 
     @Override
@@ -155,6 +170,7 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
 
         private TextView postUserName, postTime, postDescription, blogLikeCount, blogCommentCount;
         private ImageView postImage, likeBtn, commentBtn;
+        private Button deleteBtn;
         private CircleImageView postUserImage;
         private View view;
 
@@ -166,6 +182,7 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
             postDescription = (TextView) view.findViewById(R.id.post_description);
             blogLikeCount = (TextView) view.findViewById(R.id.blog_like_count);
             blogCommentCount = (TextView) view.findViewById(R.id.blog_comment_count);
+            deleteBtn = (Button) view.findViewById(R.id.delete_post_btn);
             postImage = (ImageView) view.findViewById(R.id.post_image);
             likeBtn = (ImageView) view.findViewById(R.id.blog_like_btn);
             commentBtn = (ImageView) view.findViewById(R.id.blog_comment_btn);

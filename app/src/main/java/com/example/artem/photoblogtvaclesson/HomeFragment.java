@@ -2,15 +2,15 @@ package com.example.artem.photoblogtvaclesson;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -27,6 +27,7 @@ public class HomeFragment extends Fragment {
 
     private RecyclerView blog_list_view;
     private List<BlogPost> blog_list;
+    private List<User> user_list;
 
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
@@ -36,9 +37,7 @@ public class HomeFragment extends Fragment {
     private Boolean isFirstPageFirstLoad = true;
 
     public HomeFragment() {
-        // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -47,11 +46,12 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         blog_list = new ArrayList<>();
+        user_list = new ArrayList<>();
         blog_list_view = view.findViewById(R.id.post_view);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        blogRecyclerAdapter = new BlogRecyclerAdapter(blog_list);
+        blogRecyclerAdapter = new BlogRecyclerAdapter(blog_list, user_list);
         blog_list_view.setLayoutManager(new LinearLayoutManager(container.getContext()));
         blog_list_view.setAdapter(blogRecyclerAdapter);
         blog_list_view.setHasFixedSize(true);
@@ -87,6 +87,7 @@ public class HomeFragment extends Fragment {
 
                             lastVisible = documentSnapshots.getDocuments().get(documentSnapshots.size() - 1);
                             blog_list.clear();
+                            user_list.clear();
 
                         }
 
@@ -95,21 +96,29 @@ public class HomeFragment extends Fragment {
                             if (doc.getType() == DocumentChange.Type.ADDED) {
 
                                 String blogPostId = doc.getDocument().getId();
-                                BlogPost blogPost = doc.getDocument().toObject(BlogPost.class).withId(blogPostId);
+                                final BlogPost blogPost = doc.getDocument().toObject(BlogPost.class).withId(blogPostId);
 
-                                if (isFirstPageFirstLoad) {
+                                String blogUserID = doc.getDocument().getString("user_id");
+                                firebaseFirestore.collection("Users").document(blogUserID).get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()){
+                                                    User user = task.getResult().toObject(User.class);
 
-                                    blog_list.add(blogPost);
+                                                    if (isFirstPageFirstLoad) {
+                                                        user_list.add(user);
+                                                        blog_list.add(blogPost);
 
-                                } else {
+                                                    } else {
+                                                        user_list.add(0, user);
+                                                        blog_list.add(0, blogPost);
 
-                                    blog_list.add(0, blogPost);
-
-                                }
-
-
-                                blogRecyclerAdapter.notifyDataSetChanged();
-
+                                                    }
+                                                }
+                                                blogRecyclerAdapter.notifyDataSetChanged();
+                                            }
+                                        });
                             }
                         }
 
@@ -148,10 +157,21 @@ public class HomeFragment extends Fragment {
                             if (doc.getType() == DocumentChange.Type.ADDED) {
 
                                 String blogPostId = doc.getDocument().getId();
-                                BlogPost blogPost = doc.getDocument().toObject(BlogPost.class).withId(blogPostId);
-                                blog_list.add(blogPost);
+                                final BlogPost blogPost = doc.getDocument().toObject(BlogPost.class).withId(blogPostId);
+                                String blogUserID = doc.getDocument().getString("user_id");
+                                firebaseFirestore.collection("Users").document(blogUserID).get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()){
+                                                    User user = task.getResult().toObject(User.class);
+                                                    user_list.add(user);
+                                                    blog_list.add(blogPost);
 
-                                blogRecyclerAdapter.notifyDataSetChanged();
+                                                }
+                                                blogRecyclerAdapter.notifyDataSetChanged();
+                                            }
+                                        });
                             }
 
                         }
