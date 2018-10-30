@@ -21,4 +21,5 @@
     <string name="postUserName">User Name</string>
     <string name="postTime">Post Time</string>
     <string name="postDescription">Description Post</string>
+    <string name="Comments">Comments:</string>
 </resources>

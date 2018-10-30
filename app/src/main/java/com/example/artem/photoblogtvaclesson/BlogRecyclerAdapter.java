@@ -1,6 +1,7 @@
 package com.example.artem.photoblogtvaclesson;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
@@ -133,6 +134,15 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
             }
         });
 
+        holder.commentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent commentIntent = new Intent(context, CommentsActivity.class);
+                commentIntent.putExtra("blog_post_id", blogPostID);
+                context.startActivity(commentIntent);
+            }
+        });
+
     }
 
     @Override
@@ -143,8 +153,8 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView postUserName, postTime, postDescription, blogLikeCount;
-        private ImageView postImage, likeBtn;
+        private TextView postUserName, postTime, postDescription, blogLikeCount, blogCommentCount;
+        private ImageView postImage, likeBtn, commentBtn;
         private CircleImageView postUserImage;
         private View view;
 
@@ -155,8 +165,10 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
             postTime = (TextView) view.findViewById(R.id.post_time);
             postDescription = (TextView) view.findViewById(R.id.post_description);
             blogLikeCount = (TextView) view.findViewById(R.id.blog_like_count);
+            blogCommentCount = (TextView) view.findViewById(R.id.blog_comment_count);
             postImage = (ImageView) view.findViewById(R.id.post_image);
             likeBtn = (ImageView) view.findViewById(R.id.blog_like_btn);
+            commentBtn = (ImageView) view.findViewById(R.id.blog_comment_btn);
             postUserImage = (CircleImageView) view.findViewById(R.id.post_user_image);
 
 
