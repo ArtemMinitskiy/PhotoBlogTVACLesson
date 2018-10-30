@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -16,12 +17,20 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 public class CommentsActivity extends AppCompatActivity {
 
@@ -29,6 +38,9 @@ public class CommentsActivity extends AppCompatActivity {
     private EditText commentText;
     private ImageButton commentBtn;
     private RecyclerView commentRecyclerView;
+
+    private CommentsAdapter commentsAdapter;
+    private List<Comments> commentsList;
 
     private String blog_post_id;
     private String current_user_id;
@@ -56,6 +68,33 @@ public class CommentsActivity extends AppCompatActivity {
 
         current_user_id = commentsAuth.getCurrentUser().getUid();
         blog_post_id = getIntent().getStringExtra("blog_post_id");
+
+        commentsList = new ArrayList<>();
+        commentsAdapter = new CommentsAdapter(commentsList);
+        commentRecyclerView.setHasFixedSize(true);
+        commentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        commentRecyclerView.setAdapter(commentsAdapter);
+
+        commentsFirestore.collection("Posts/" + blog_post_id + "/Comments")
+                .addSnapshotListener(CommentsActivity.this, new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (!queryDocumentSnapshots.isEmpty()) {
+
+                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+
+                        if (doc.getType() == DocumentChange.Type.ADDED) {
+
+                            String commentId = doc.getDocument().getId();
+                            Comments comments = doc.getDocument().toObject(Comments.class);
+                            commentsList.add(comments);
+                            commentsAdapter.notifyDataSetChanged();
+
+                        }
+                    }
+                }
+            }
+        });
 
         commentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
